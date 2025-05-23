@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Outline Generator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .container {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .image-container {
+            margin: 10px;
+            min-width: 300px;
+        }
+        img {
+            max-width: 350px;
+            max-height: 350px;
+            border: 1px solid #ddd;
+            margin-top: 10px;
+        }
+        .upload-btn {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px;
+        }
+        .upload-btn:hover {
+            background-color: #45a049;
+        }
+        .file-input {
+            display: none;
+        }
+
+        .download-btn {
+            background-color: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .download-btn:hover {
+            background-color: #0b7dda;
+        }
+
+        #drop-area {
+            border: 2px dashed #ccc;
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            margin: 20px 0;
+        }
+        #drop-area.highlight {
+            border-color: purple;
+        }
+        #generate-btn {
+            display: none;
+            background-color: #2196F3;
+        }
+        #preview {
+            margin-top: 20px;
+        }
+        #preview img {
+            max-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Image Outline Generator</h1>
+    <p>Drag & drop an image or click to select</p>
+    
+    <form id="upload-form" method="POST" enctype="multipart/form-data">
+        <div id="drop-area">
+            <p>Drag & drop your image here</p>
+            <p>or</p>
+            <label for="file-upload" class="upload-btn">
+                Select Image
+            </label>
+            <input id="file-upload" class="file-input" type="file" name="file" accept="image/*">
+        </div>
+        
+        <div id="preview"></div>
+        
+        <button id="generate-btn" type="submit" class="upload-btn">Generate Outline</button>
+    </form>
+    
+    {% if input_image and output_image %}
+    <div class="container">
+        <div class="image-container">
+            <h3>Original Image</h3>
+            <img src="{{ url_for('static', filename='uploads/' + input_image) }}" alt="Original Image">
+        </div>
+        <div class="image-container">
+            <h3>Outline</h3>
+            <img src="{{ url_for('static', filename='uploads/' + output_image) }}" alt="Outline Image">
+            <div style="margin-top: 15px;">
+                <a href="{{ url_for('static', filename='uploads/' + output_image) }}" download class="upload-btn" style="background-color: #2196F3; text-decoration: none; display: inline-block;">
+                    Download Outline
+                </a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+    <script>
+        // Drag and drop functionality
+        const dropArea = document.getElementById('drop-area');
+        const fileInput = document.getElementById('file-upload');
+        const preview = document.getElementById('preview');
+        const generateBtn = document.getElementById('generate-btn');
+        const form = document.getElementById('upload-form');
+        
+        // Prevent default drag behaviors
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, preventDefaults, false);
+            document.body.addEventListener(eventName, preventDefaults, false);
+        });
+        
+        // Highlight drop area when item is dragged over it
+        ['dragenter', 'dragover'].forEach(eventName => {
+            dropArea.addEventListener(eventName, highlight, false);
+        });
+        
+        ['dragleave', 'drop'].forEach(eventName => {
+            dropArea.addEventListener(eventName, unhighlight, false);
+        });
+        
+        // Handle dropped files
+        dropArea.addEventListener('drop', handleDrop, false);
+        
+        // Handle selected files
+        fileInput.addEventListener('change', handleFiles, false);
+        
+        function preventDefaults(e) {
+            e.preventDefault();
+            e.stopPropagation();
+        }
+        
+        function highlight() {
+            dropArea.classList.add('highlight');
+        }
+        
+        function unhighlight() {
+            dropArea.classList.remove('highlight');
+        }
+        
+        function handleDrop(e) {
+            const dt = e.dataTransfer;
+            const files = dt.files;
+            fileInput.files = files;
+            handleFiles({target: {files: files}});
+        }
+        
+        function handleFiles(e) {
+            const files = e.target.files;
+            if (files.length) {
+                const file = files[0];
+                if (file.type.startsWith('image/')) {
+                    // Show preview
+                    preview.innerHTML = '';
+                    const img = document.createElement('img');
+                    img.src = URL.createObjectURL(file);
+                    preview.appendChild(img);
+                    
+                    // Show generate button
+                    generateBtn.style.display = 'inline-block';
+                    
+                    // Hide drop area instructions
+                    dropArea.querySelector('p').style.display = 'none';
+                } else {
+                    alert('Please select an image file.');
+                }
+            }
+        }
+        
+        // Form submission with feedback
+        form.addEventListener('submit', function(e) {
+            if (!fileInput.files.length) {
+                e.preventDefault();
+                alert('Please select an image first.');
+            }
+        });
+    </script>
+</body>
+</html>
