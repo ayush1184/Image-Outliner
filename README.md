@@ -2,7 +2,7 @@
 
 This project converts images into outlines/pencil sketches using a Laplacian filter, now with a user-friendly web interface. The implementation leverages Flask for the web application and OpenCV/NumPy for image processing.
 
-![Demo](demo.gif) *(Example of the web interface in action)*
+![Demo]([demo.gif](https://github.com/user-attachments/assets/b2ee4c18-8b32-44db-9b6a-291e794ba7c1)) *(Example of the web interface in action)*
 
 ## Features
 
