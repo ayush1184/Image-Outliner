@@ -1,96 +1,67 @@
-# Image Outline/Pencil Sketch Converter
+# Web-Based Image Outliner
 
-This project converts an image into an outline or pencil sketch using a Laplacian filter. The implementation leverages OpenCV and NumPy libraries.
+This project converts images into outlines/pencil sketches using a Laplacian filter, now with a user-friendly web interface. The implementation leverages Flask for the web application and OpenCV/NumPy for image processing.
 
-# Demo
-Original image             |  Outline image
-:-------------------------:|:-------------------------:
-![](ash.webp)               | ![](outline.jpg)
+![Demo](demo.gif) *(Example of the web interface in action)*
 
 ## Features
 
-- Converts any image into an outline suitable for drawing.
-- Utilizes Laplacian filter for edge detection.
-- Simple command-line interface for easy usage.
+- **Drag & Drop Interface**: Easily upload images by dragging or selecting files
+- **Image Preview**: See your selected image before processing
+- **Outline Generation**: Convert images to outlines with one click
+- **Download Results**: Save your outline images with a single click
+- **Responsive Design**: Works on both desktop and mobile devices
 
 ## Technologies Used
 
-- **OpenCV**: For image processing tasks.
-- **NumPy**: For numerical operations and handling arrays.
+- **Flask**: Python web framework for the backend
+- **OpenCV**: For image processing tasks
+- **NumPy**: For numerical operations and array handling
+- **HTML/CSS/JavaScript**: For the interactive frontend interface
 
 ## Installation
 
 1. Clone the repository:
 
     ```bash
-    git clone [https://github.com/ay/image-outline-converter.git](https://github.com/ayush1184/Image-Outliner.git)
+    git clone https://github.com/your-username/image-outliner-web.git
+    cd image-outliner-web
     ```
 
-2. Navigate to the project directory:
+2. Create and activate a virtual environment (recommended):
 
     ```bash
-    cd image-outline-converter
+    python -m venv venv
+    # On Windows:
+    venv\Scripts\activate
+    # On Mac/Linux:
+    source venv/bin/activate
     ```
 
 3. Install the required dependencies:
 
     ```bash
-    pip install opencv-python numpy
+    pip install flask opencv-python numpy
     ```
 
 ## Usage
 
-1. Run the `main.py` script:
+1. Run the Flask application:
 
     ```bash
-    python main.py
+    python app.py
     ```
 
-2. Enter the name of the image file when prompted:
+2. Open your web browser and navigate to:
 
-    ```bash
-    Enter image name:
+    ```
+    http://localhost:5000
     ```
 
-3. The program will read the input image, process it, and save the outline as `outline.jpg` in the same directory.
+3. Use the interface to:
+   - Drag & drop an image or click to select
+   - Preview your selected image
+   - Click "Generate Outline" to process
+   - Download the result with the "Download Outline" button
 
 ## Project Structure
-
-- **main.py**: The main script to run the image outline conversion.
-- **filtering.py**: Contains the `Filtering` class which handles the image processing logic.
-
-## Example
-
-To convert an image named `sample.jpg`, follow these steps:
-
-1. Place `sample.jpg` in the project directory.
-2. Run the script:
-
-    ```bash
-    python main.py
-    ```
-
-3. When prompted, enter `sample.jpg`:
-
-    ```bash
-    Enter image name: sample.jpg
-    ```
-
-4. The outline image will be saved as `outline.jpg`.
-
-## Code Explanation
-
-### main.py
-
-```python
-import filtering
-import cv2
-
-if __name__ == "__main__":
-    print('Enter image name:')
-    image_name = input()
-    input_image = cv2.imread(image_name, 0)
-    outline = filtering.Filtering(input_image)
-    an_outline = outline.get_outline()
-    output_image_name = "outline.jpg"
-    cv2.imwrite(output_image_name, an_outline)
